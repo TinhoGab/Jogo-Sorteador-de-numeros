@@ -12,8 +12,14 @@ function sortear(){
 
     for (let i = 0; i < quantidade; i++) {
         numero = obeterNumeroAleatorio(de, ate);
+
         while(sorteados.includes(numero)) {
             numero = obeterNumeroAleatorio(de, ate);
+            if(quantidade >= (ate - de + 1)) {
+                alert('Campo "Quantidade de números" deve ser menor ao intervalo informado no campo "Do número" até o campo "Até o número" . Por favor Verifique!');
+                return;
+            }
+            alert('Tentando obter número inédito');
         }
         sorteados.push(numero);
     }

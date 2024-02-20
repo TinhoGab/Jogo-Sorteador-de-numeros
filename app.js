@@ -1,32 +1,49 @@
-let jogosAlugados = 0;
-
-function contarEExibirJogosAlugados() {
-    console.log(`Total de jogos alugados é ${jogosAlugados}`);
-}
-
-function alterarStatus(id) {
-    let gameClicado = document.getElementById(`game-${id}`);
-    let imagem = gameClicado.querySelector('.dashboard__item__img');
-    let botao = gameClicado.querySelector('.dashboard__item__button');
-    let nomeJogo = gameClicado.querySelector('.dashboard__item__name');
-
-
-    if (imagem.classList.contains('dashboard__item__img--rented')) {
-        if (confirm(`Você tem certeza que deseja devolver o jogo ${nomeJogo.textContent}?`)) {
-            imagem.classList.remove('dashboard__item__img--rented');
-            botao.classList.remove('dashboard__item__button--return');
-            botao.textContent = 'Alugar';
-            jogosAlugados--;
-        }
-    } else {
-        imagem.classList.add('dashboard__item__img--rented');
-        botao.classList.add('dashboard__item__button--return');
-        botao.textContent = 'Devolver';
-        jogosAlugados++;
+function sortear(){
+    let quantidade = parseInt(document.getElementById('quantidade').value);
+    let de = parseInt(document.getElementById('de').value);
+    let ate = parseInt(document.getElementById('ate').value);
+    let sorteados = [];
+    let numero;
+    
+    if(de >= ate) {
+        alert('Campo "Do número" deve ser menor que o campo "Até o número" . Por favor Verifique!');
+        return;
     }
-    contarEExibirJogosAlugados();
+
+    for (let i = 0; i < quantidade; i++) {
+        numero = obeterNumeroAleatorio(de, ate);
+
+        while(sorteados.includes(numero)) {
+            numero = obeterNumeroAleatorio(de, ate);
+            if(quantidade >= (ate - de + 1)) {
+                alert('Campo "Quantidade de números" deve ser menor ao intervalo informado no campo "Do número" até o campo "Até o número" . Por favor Verifique!');
+                return;
+            }
+            alert('Tentando obter número inédito');
+        }
+        sorteados.push(numero);
+    }
+    let resultado = document.getElementById('resultado');
+    resultado.innerHTML = `<label class="texto__paragrafo">Números sorteados: ${sorteados}</label>`;
+    alterarStatusBotao();
 }
-document.addEventListener('DOMContentLoaded', function() {
-    jogosAlugados = document.querySelectorAll('.dashboard__item__img--rented').length;
-    contarEExibirJogosAlugados();
-});
+function obeterNumeroAleatorio (min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+function alterarStatusBotao() {
+    let botao = document.getElementById('btn-reiniciar');
+    if (botao.classList.contains('container__botao-desabilitado')){
+        botao.classList.remove('container__botao-desabilitado');
+        botao.classList.add('container__botao');
+    }else {
+        botao.classList.remove('container__botao');
+        botao.classList.add('container__botao-desabilitado');
+    }
+}
+function reiniciar(){
+    document.getElementById('de').value = '';
+    document.getElementById('quantidade').value = '';
+    document.getElementById('ate').value = '';
+    document.getElementById('resultado').innerHTML = '<label class="texto__paragrafo">Números sorteados:  nenhum até agora</label>';
+    alterarStatusBotao();
+}
